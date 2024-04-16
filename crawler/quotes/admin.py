@@ -21,6 +21,7 @@ class AuthorFilter(admin.SimpleListFilter):
             if self.value() == q.creator:
                 return Quotes.objects.filter(
                     creator =(q.creator),
+                    
                 )
 
 class QuotesAdmin(admin.ModelAdmin):

@@ -15,10 +15,11 @@ def data_request_movie(request):
     items_on_page = soup.find_all(class_ = "ipc-metadata-list-summary-item sc-10233bc-0 iherUv cli-parent")
     for items in items_on_page:
         data = []
-        main = ((items.find(class_ = "ipc-title ipc-title--base ipc-title--title ipc-title-link-no-icon ipc-title--on-textPrimary sc-b0691f29-9 klOwFB cli-title")).get_text()).split(".",1)
-        for objects in items.find_all(class_ = "sc-b0691f29-8 ilsLEX cli-title-metadata-item"):
-            data.append(objects.get_text())
+        main = ((items.find(class_ = "ipc-title ipc-title--base ipc-title--title ipc-title-link-no-icon ipc-title--on-textPrimary sc-b189961a-9 iALATN cli-title")).get_text()).split(".",1)
         
+        for objects in items.find_all(class_ = "sc-b189961a-8 kLaxqf cli-title-metadata-item"):
+            data.append(objects.get_text())
+
         if len(data) == 3:
             Movies.objects.get_or_create(
                 rank = int(main[0]),
@@ -37,5 +38,6 @@ def data_request_movie(request):
                 minage = ("Not Rated"),
                 score = items.find(class_ = "ipc-rating-star ipc-rating-star--base ipc-rating-star--imdb ratingGroup--imdb-rating").get_text().split('(',1)[0]
             )
+
     messages.success(request,"Dados adicionados com sucesso.")
     return HttpResponseRedirect(request.headers['Referer'])
