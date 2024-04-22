@@ -6,13 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.admin import SimpleListFilter
 from .models import Movies
 
-
 def get_range_date(value):
     start_date = None
     end_date = None
 
     if value:
-        start_date, end_date = value.split(" - ")
+        start_date, end_date = value.split(' - ')
         start_date = int(start_date)
         end_date = int(end_date)
 
@@ -20,14 +19,14 @@ def get_range_date(value):
 
 
 class InputRangeDateFilter(SimpleListFilter):
-    template = "input_range_filter.html"
+    template = 'input_range_filter.html'
 
     def lookups(self, *_):
         return ((),)
 
     def choices(self, changelist):
         all_choice = next(super().choices(changelist))
-        all_choice["query_parts"] = (
+        all_choice['query_parts'] = (
             (k, v) for k, v in changelist.get_filters_params().items() if k != self.parameter_name
         )
         yield all_choice
@@ -35,9 +34,9 @@ class InputRangeDateFilter(SimpleListFilter):
 
 def DateRangeFilter(date_field_name, title):
     range_filter = InputRangeDateFilter
-    range_filter = type(f"{date_field_name.capitalize()}InputRangeDateFilter", (range_filter,), {})
+    range_filter = type(f'{date_field_name.capitalize()}InputRangeDateFilter', (range_filter,), {})
 
-    range_filter.parameter_name = f"{date_field_name}_range"
+    range_filter.parameter_name = f'{date_field_name}_range'
     range_filter.title = title
 
     def queryset(self, _, queryset):
@@ -45,8 +44,8 @@ def DateRangeFilter(date_field_name, title):
 
         if start_date and end_date:
             gte_lte = {
-                f"{date_field_name}__gte": start_date,
-                f"{date_field_name}__lte": end_date,
+                f'{date_field_name}__gte': start_date,
+                f'{date_field_name}__lte': end_date,
             }
 
             queryset = queryset.filter(**gte_lte)
@@ -58,66 +57,19 @@ def DateRangeFilter(date_field_name, title):
     return range_filter
 
 
-class YearFilterStart(admin.SimpleListFilter):
-    title = _("Start Ano de Lançamento")
-    parameter_name = "yearfilterstart"
-
-    def lookups(self, request, model_admin):
-        response = []
-        for q in Movies.objects.all():
-            if (q.date, q.date) not in response:
-                response.append((q.date, q.date))
-
-        response.sort()
-        return response
-
-    def queryset(self, request, model_admin):
-        for q in Movies.objects.all():
-            if q.date is not None and (str(self.value()) == str(q.date)):
-                return Movies.objects.filter(
-                    date=(q.date),
-                )
-
-
-class YearFilterEnd(admin.SimpleListFilter):
-    title = _("End Ano de Lançamento")
-    parameter_name = "yearfilterend"
-
-    def lookups(self, request, model_admin):
-
-        response = []
-        for q in Movies.objects.all():
-            if (q.date, q.date) not in response:
-                response.append((q.date, q.date))
-
-        response.sort()
-        return response
-
-    def queryset(self, request, model_admin):
-
-        date_lte = request.GET.get("yearfilterstart", None)
-        date_gte = request.GET.get("yearfilterend", None)
-        if date_lte is not None and date_gte is not None:
-            if request.GET.get("yearfilterstart") <= request.GET.get("yearfilterend"):
-                return Movies.objects.filter(
-                    date__gte=int(date_lte),
-                    date__lte=int(date_gte),
-                )
-
-
-class AgeFilter(admin.SimpleListFilter):
+class AgeFilter(admin.SimpleListFilter): 
     title = _("Idade minima")
     parameter_name = "agefilter"
 
-    def lookups(self, request, model_admin):
-        response = []
+    def lookups(self,request, model_admin):
+        response = [] 
         for q in Movies.objects.all():
-            if (q.minage, q.minage) not in response:
-                response.append((q.minage, q.minage))
-
-        response.sort()
+            if (q.minage,q.minage) not in response:
+                response.append((q.minage,q.minage))
+        
+        response.sort( )
         return response
-
+     
     def queryset(self, request, model_admin):
         for q in Movies.objects.all():
             if self.value() == q.minage:
@@ -125,20 +77,19 @@ class AgeFilter(admin.SimpleListFilter):
                     minage=(q.minage),
                 )
 
-
-class ScoreFilter(admin.SimpleListFilter):
+class ScoreFilter(admin.SimpleListFilter): 
     title = _("Nota do filme")
     parameter_name = "scorefilter"
 
-    def lookups(self, request, model_admin):
+    def lookups(self,request, model_admin):
         response = []
-        for q in Movies.objects.all():
-            if (q.score, q.score) not in response:
-                response.append((q.score, q.score))
-
+        for q in Movies.objects.all(): 
+            if (q.score,q.score) not in response:
+                response.append((q.score,q.score))
+        
         response.sort(reverse=True)
         return response
-
+     
     def queryset(self, request, model_admin):
         for q in Movies.objects.all():
             if self.value() == q.score:
@@ -146,13 +97,12 @@ class ScoreFilter(admin.SimpleListFilter):
                     score=(q.score),
                 )
 
-
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ["rank", "title", "date", "time", "minage", "score"]
-    list_filter = [AgeFilter, ScoreFilter]
-    search_fields = ["title"]
+    list_display = ["rank", "title","date","time","minage","score"]
+    list_filter = [DateRangeFilter('date', 'Criado: de - até'),AgeFilter,ScoreFilter]
+    search_fields = ['title'] 
     ordering = ["rank"]
-    change_form_template = "films/custom_change_form.html"
-
+    change_form_template = 'films/custom_change_form.html' 
+    
 
 admin.site.register(Movies, MovieAdmin)

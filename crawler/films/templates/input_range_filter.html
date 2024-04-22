@@ -5,7 +5,7 @@
         {{ spec.title }}
       </span>
     </div>
-    <input type="text" class="form-control float-right daterange" name="{{ spec.parameter_name }} "
+    <input type="text" class="form-control float-right daterange" name="{{ spec.parameter_name }}"
       value="{{ spec.value|default_if_none:'' }}" id="{{ spec.parameter_name }}_id" autocomplete="off">
   </div>
 </div>
