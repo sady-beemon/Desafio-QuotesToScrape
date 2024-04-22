@@ -1,0 +1,11 @@
+<div class="form-group">
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">
+        {{ spec.title }}
+      </span>
+    </div>
+    <input type="text" class="form-control float-right daterange" name="{{ spec.parameter_name }} "
+      value="{{ spec.value|default_if_none:'' }}" id="{{ spec.parameter_name }}_id" autocomplete="off">
+  </div>
+</div>
