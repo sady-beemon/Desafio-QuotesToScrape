@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from decouple import config, Csv
 from pathlib import Path
 
@@ -26,16 +26,17 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast= Csv())
 # Application definition
 
 INSTALLED_APPS = [
+    'crawler.core',
     'jazzmin',
-    'rangefilter',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'quotes',
-    'films',
+    'rangefilter',
+    'crawler.quotes',
+    'crawler.films',
 ]
 
 MIDDLEWARE = [
@@ -110,8 +111,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_URL = config('STATIC_URL', default='/static/')
+STATIC_ROOT = config('STATIC_ROOT', default=os.path.join(BASE_DIR, 'crawler/staticfiles'))
+STATIC_LOCATION = 'static'
+
+STATICFILES_STORAGE = config(
+    'STATICFILES_STORAGE',
+    default='django.contrib.staticfiles.storage.StaticFilesStorage',
+)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

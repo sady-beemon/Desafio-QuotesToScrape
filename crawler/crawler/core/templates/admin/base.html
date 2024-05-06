@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% load i18n static jazzmin admin_urls %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "css/yearpicker.min.css" %}" />
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}
