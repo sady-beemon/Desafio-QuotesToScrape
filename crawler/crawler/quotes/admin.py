@@ -24,10 +24,33 @@ class AuthorFilter(admin.SimpleListFilter):
                     
                 )
 
+class BackgroundFix(admin.SimpleListFilter):
+    title = ("Background_fix")
+    parameter_name = "Background_fix"
+    template = "background_color_fix.html"
+
+    def lookups(self,request, model_admin):
+        response = []
+        for q in Quotes.objects.all():
+            if (q.creator,q.creator) not in response:
+                response.append((q.creator,q.creator))
+        
+        response.sort()
+        return response
+    
+    def queryset(self, request, model_admin):
+        for q in Quotes.objects.all():
+            if self.value() == q.creator:
+                return Quotes.objects.filter(
+                    creator =(q.creator),
+                    
+                )
+
+
 class QuotesAdmin(admin.ModelAdmin):
     list_display = ["content", "creator","tags"]
     ordering = ["content"]
-    list_filter = [AuthorFilter]
+    list_filter = [AuthorFilter,BackgroundFix]
     search_fields = ["content"]
     actions = ["fill_in"]
     change_form_template = 'quotes/custom_change_form.html'
@@ -38,7 +61,3 @@ class QuotesAdmin(admin.ModelAdmin):
 
 admin.site.register(Quotes, QuotesAdmin)
 
-
-
-# Register your models here.
- 

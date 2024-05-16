@@ -8,7 +8,7 @@ from typing import Any
 from .models import Movies
 
 
-def get_range_date(value):
+def get_int_range_date(value):
     start_date = None
     end_date = None
 
@@ -20,8 +20,8 @@ def get_range_date(value):
     return start_date, end_date
 
 
-class InputRangeDateFilter(SimpleListFilter):
-    template = 'input_range_filter.html'
+class InputRangeYearFilter(SimpleListFilter):
+    template = 'input_year_range_filter.html'
   
     def lookups(self, *_):
         return ((),)
@@ -34,15 +34,66 @@ class InputRangeDateFilter(SimpleListFilter):
         yield all_choice
 
 
-def dateRangeFilter(date_field_name, title):
-    range_filter = InputRangeDateFilter
+def yearRangeFilter(date_field_name, title):
+    range_filter = InputRangeYearFilter
     #range_filter = type(f'{date_field_name.capitalize()}InputRangeDateFilter', (range_filter,), {})
 
     range_filter.parameter_name = f'{date_field_name}_range'
     range_filter.title = title
 
     def queryset(self, _, queryset):
-        start_date, end_date = get_range_date(self.value())
+        start_date, end_date = get_int_range_date(self.value())
+
+        if start_date and end_date:
+            gte_lte = {
+                f'{date_field_name}__gte': start_date,
+                f'{date_field_name}__lte': end_date,
+            }
+
+            queryset = queryset.filter(**gte_lte)
+
+        return queryset
+
+    range_filter.queryset = queryset
+
+    return range_filter
+
+
+def get_float_range_date(value):
+    start_date = None
+    end_date = None
+
+    if value:
+        start_date, end_date = value.split(' - ')
+        start_date = float(start_date)
+        end_date = float(end_date)
+
+    return start_date, end_date
+
+
+class InputRangeScoreFilter(SimpleListFilter):
+    template = 'input_score_range_filter.html'
+  
+    def lookups(self, *_):
+        return ((),)
+
+    def choices(self, changelist):
+        all_choice = next(super().choices(changelist))
+        all_choice['query_parts'] = (
+            (k, v) for k, v in changelist.get_filters_params().items() if k != self.parameter_name
+        )
+        yield all_choice
+
+
+def scoreRangeFilter(date_field_name, title):
+    range_filter = InputRangeScoreFilter
+    #range_filter = type(f'{date_field_name.capitalize()}InputRangeDateFilter', (range_filter,), {})
+
+    range_filter.parameter_name = f'{date_field_name}_range'
+    range_filter.title = title
+
+    def queryset(self, _, queryset):
+        start_date, end_date = get_float_range_date(self.value())
 
         if start_date and end_date:
             gte_lte = {
@@ -79,29 +130,9 @@ class AgeFilter(admin.SimpleListFilter):
                     minage=(q.minage),
                 )
 
-class ScoreFilter(admin.SimpleListFilter): 
-    title = _("Nota do filme")
-    parameter_name = "scorefilter"
-
-    def lookups(self,request, model_admin):
-        response = []
-        for q in Movies.objects.all(): 
-            if (q.score,q.score) not in response:
-                response.append((q.score,q.score))
-        
-        response.sort(reverse=True)
-        return response
-     
-    def queryset(self, request, model_admin):
-        for q in Movies.objects.all():
-            if self.value() == q.score:
-                return Movies.objects.filter(
-                    score=(q.score),
-                )
-
 class MovieAdmin(admin.ModelAdmin):
     list_display = ["rank", "title","date","time","minage","score"]
-    list_filter = [dateRangeFilter('date', 'Ano Criado: de - até'),AgeFilter,ScoreFilter]
+    list_filter = [yearRangeFilter('date', 'Ano Criado: de - até'),scoreRangeFilter('score','Nota do filme: de - até'),AgeFilter]
     search_fields = ['title'] 
     ordering = ["rank"]
     change_form_template = 'films/custom_change_form.html' 

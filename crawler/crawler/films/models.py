@@ -6,4 +6,4 @@ class Movies(models.Model):
     date = models.IntegerField('Ano do filme',blank=True,null=True)
     time = models.TextField('Tempo do filme',blank=True,null=True)
     minage = models.TextField('Idade minima',blank=True,null=True)
-    score = models.TextField('Nota do filme',blank=True,null=True)
+    score = models.FloatField('Nota do filme',blank=True,null=True)

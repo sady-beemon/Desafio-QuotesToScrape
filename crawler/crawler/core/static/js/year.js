@@ -1,65 +1,4 @@
-console.log("Chegou aqui1")
-
-/* (function ($) {
-    $(".daterange").daterangepicker({
-      format: "yyyy",
-      showDropdowns: true,
-      minYear: 1900,
-      maxYear: 2024,
-      autoUpdateInput: false,
-      locale: {
-          cancelLabel: 'Clear'
-      },
-      isCustomDate: false,
-      autoUpdateInput: false,
-      
-    });
-
-    $('.daterange').on('apply.daterangepicker', function (ev, picker) {
-      $(this).val(picker.startDate.format('YYYY') + ' - ' + picker.endDate.format('YYYY'));
-    });
-  
-    $('.daterange').on('cancel.daterangepicker', function (ev, picker) {
-      $(this).val('');
-    });
-  
-    $(document).on('click', '.js-show-value', function (ev) {
-      var pk = $(this).data('pk');
-      console.log(pk)
-  
-      $.get('/get-plain-value/' + pk + '/', function (data) {
-        if (data.value) {
-          d = $('.display-value-' + pk);
-          d.removeClass('d-none');
-          d.html(data.value);
-        }
-      });
-  
-      $(this).html('<i class="far fa-eye-slash"></i>');
-      $(this).addClass('btn-success');
-      $(this).addClass('js-hide-value');
-      $(this).removeClass('js-show-value');
-      $(this).removeClass('btn-warning');
-    });
-  
-    $(document).on('click', '.js-hide-value', function (ev) {
-      var pk = $(this).data('pk')
-  
-      d = $('.display-value-' + pk);
-      d.html('');
-      d.addClass('d-none');
-  
-      $(this).html('<i class="far fa-eye"></i>');
-      $(this).removeClass('btn-light');
-      $(this).removeClass('js-hide-value');
-      $(this).addClass('js-show-value');
-      $(this).addClass('btn-warning');
-    });
-  
-  })(jQuery); */
-
-  ; (function ($, window, document, undefined) {
-    console.log("Chegou aqui2")
+; (function ($, window, document, undefined) {
     "use strict";
 
     let plugin;
@@ -88,10 +27,7 @@ console.log("Chegou aqui1")
                 </div>
             </div>
             <div class="year-ranges"></div>
-
-        </div>            <div class="reset">
-                <button>Cancelar</button>
-            </div>
+        </div>
     `;
 
     function Plugin(element, options) {
@@ -248,7 +184,7 @@ console.log("Chegou aqui1")
 
         _showCalendar()
         {
-            this.$_template.removeClass('hidden opacity-0')
+            this.$_template.removeClass('hidden opacity-0') 
             this.$_template.addClass('block opacity-100')
         },
 
