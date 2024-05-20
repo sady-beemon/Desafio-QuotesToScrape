@@ -228,6 +228,7 @@
                 this.$_minScore = 9;
                 this.$_maxScore = 10;
             }
+            
             let range = this.$_template.find('.year-ranges')
             let items = [];
             for (let i = this.$_minScore; i < this.$_maxScore; i+=0.1) {
@@ -283,6 +284,7 @@
         {
             let value = this.$_element.val();
             let extracts = value.split(' - ');
+            console.log(extracts)
             if (extracts.length <= 0) {
                 return;
             }
@@ -290,10 +292,14 @@
             let startRange = null;
             let endRange = null;
             if (extracts.length >= 1) {
-                startRange = parseFloat(extracts[0] || 0) > 1000 ? parseFloat(extracts[0] || 0) : null;
+                startRange = parseFloat(extracts[0] || 0) < 10 ? parseFloat(extracts[0] || 0) : null;
                 endRange = parseFloat(extracts[1] || 0) > startRange ? parseFloat(extracts[1] || 0) : null;
-            }
 
+                if (startRange >= 10) {
+                    startRange = parseFloat(extracts[1]);
+                    endRange = 10
+                }
+            }
             this.$_startRange = startRange;
             this.$_endRange = endRange;
         }
