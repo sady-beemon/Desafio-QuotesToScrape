@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidenav">
+    <a href="">Usuario</a>
+    <a href="{% url 'movies_page' %}"id="current_sidebar_page">Movies</a>
+    <a href="{% url 'quotes_page' %}" >Quotes</a>
+</div>
+
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar">
+    <h1>Moviess - movies</h1>
+    <button>Add movies</button>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="main">
+    <table>
+        <caption>Movies</caption>
+        
+        <thead>
+            <tr>
+                <th scope="col">Rank do filme</th>
+                <th scope="col">Titulo do filme</th>
+                <th scope="col">Ano do filme</th>
+                <th scope="col">Tempo do filme</th>
+                <th scope="col">Idade minima</th>
+                <th scope="col">Nota do filme</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for movie in movies %}
+            <tr>
+                <td>{{movie.rank}}</td>
+                <td>{{movie.title}}</td>
+                <td>{{movie.date}}</td>
+                <td>{{movie.time}}</td>
+                <td>{{movie.minage}}</td>
+                <td>{{movie.score}}</td>
+            </tr> 
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

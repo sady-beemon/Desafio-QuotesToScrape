@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidenav">
+    <a href="">Usuario</a>
+    <a href="{% url 'movies_page' %}">Movies</a>
+    <a href="{% url 'quotes_page' %}" id="current_sidebar_page">Quotes</a>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="main">
+    <table>
+        <caption>Quotes</caption>
+        
+        <thead>
+            <tr>
+                <th scope="col">Conteudo da frase</th>
+                <th scope="col">Author da frase</th>
+                <th scope="col">Tags da frase</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        {% for quote in quotes %}
+            <tr>
+                <td>{{quote.content}}</td>
+                <td>{{quote.creator}}</td>
+                <td>{{quote.tags}}</td>
+            </tr> 
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

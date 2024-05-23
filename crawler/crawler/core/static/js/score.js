@@ -295,10 +295,6 @@
                 startRange = parseFloat(extracts[0] || 0) < 10 ? parseFloat(extracts[0] || 0) : null;
                 endRange = parseFloat(extracts[1] || 0) > startRange ? parseFloat(extracts[1] || 0) : null;
 
-                if (startRange >= 10) {
-                    startRange = parseFloat(extracts[1]);
-                    endRange = 10
-                }
             }
             this.$_startRange = startRange;
             this.$_endRange = endRange;
@@ -311,7 +307,7 @@
             }
         });
         return this;
-    };
+    }; 
     $.fn[PLUGIN_NAME].defaults = {
         property  : 'value',
         onComplete: null

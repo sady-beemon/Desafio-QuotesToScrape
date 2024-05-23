@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="login">
+    <center>
+        <input type="text" placeholder="Account user name">
+        <br>
+        <input type="text" placeholder="User password">
+        <br>
+        <button><a href="{% url 'login_page' %}">Go back</a></button>
+        <button><a href="{% url 'movies_page' %}">Confirm</a></button>
+    </center>
+</div>
+{% endblock %}

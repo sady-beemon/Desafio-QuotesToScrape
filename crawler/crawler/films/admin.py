@@ -21,7 +21,7 @@ def get_int_range_date(value):
 
 
 class InputRangeYearFilter(SimpleListFilter):
-    template = 'input_year_range_filter.html'
+    template = 'admin/input_year_range_filter.html'
   
     def lookups(self, *_):
         return ((),)
@@ -72,7 +72,7 @@ def get_float_range_date(value):
 
 
 class InputRangeScoreFilter(SimpleListFilter):
-    template = 'input_score_range_filter.html'
+    template = 'admin/input_score_range_filter.html'
   
     def lookups(self, *_):
         return ((),)

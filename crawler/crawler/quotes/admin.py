@@ -27,7 +27,7 @@ class AuthorFilter(admin.SimpleListFilter):
 class BackgroundFix(admin.SimpleListFilter):
     title = ("Background_fix")
     parameter_name = "Background_fix"
-    template = "background_color_fix.html"
+    template = "admin/background_color_fix.html"
 
     def lookups(self,request, model_admin):
         response = []
