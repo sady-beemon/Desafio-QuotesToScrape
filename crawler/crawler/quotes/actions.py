@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def data_request(request):
+def data_request_quotes(request):
 
     page_number = 1
     soup = get_page_content(page_number)

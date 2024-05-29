@@ -12,13 +12,23 @@
 {% block topbar %}
 <div class="topbar">
     <h1>Moviess - movies</h1>
-    <button>Add movies</button>
+    <button><a href="{% url 'movies_new' %}">Add movies</a></button>
+
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
 
 {% block content %}
 
 <div class="main">
+
     <table>
         <caption>Movies</caption>
         
@@ -32,11 +42,14 @@
                 <th scope="col">Nota do filme</th>
             </tr>
         </thead>
+
+        
         <tbody>
         {% for movie in movies %}
+
             <tr>
                 <td>{{movie.rank}}</td>
-                <td>{{movie.title}}</td>
+                <td><a  href="{% url 'movies_edit' pk=movie.pk %}" >{{movie.title}}</a></td>
                 <td>{{movie.date}}</td>
                 <td>{{movie.time}}</td>
                 <td>{{movie.minage}}</td>

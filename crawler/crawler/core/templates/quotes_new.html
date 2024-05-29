@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidenav">
+    <a href="">Usuario</a>
+    <a href="{% url 'movies_page' %}">Movies</a>
+    <a href="{% url 'quotes_page' %}"id="current_sidebar_page" >Quotes</a>
+</div>
+
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar">
+    <h1>Quotess - <a href="{% url 'quotes_page' %}">quotes </a> - new</h1>
+    <button><a href="{% url 'quotes_new' %}">Add quotes</a></button>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="main" >
+
+    <h3>Add top films from Quotes to Scrape - <a href="https://quotes.toscrape.com/page/1">https://quotes.toscrape.com/page/1</a>    
+        <button class="run_crawler_btn"><a href="{% url 'quotes_run_crawler' %}">Run Crawler</a></button>
+    </h3>
+
+    <br>
+
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+</div >
+
+{% endblock %}

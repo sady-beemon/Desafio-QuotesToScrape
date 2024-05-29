@@ -1,6 +1,6 @@
 from django.contrib import admin
 from crawler.quotes.models import Quotes
-from crawler.quotes.actions import data_request
+from crawler.quotes.actions import data_request_quotes
 
 
 class AuthorFilter(admin.SimpleListFilter):
@@ -57,7 +57,7 @@ class QuotesAdmin(admin.ModelAdmin):
 
     @admin.action(description="Fill in with data from https://quotes.toscrape.com/")
     def fill_in(modeladmin, request, queryset):
-            data_request()
+            data_request_quotes()
 
 admin.site.register(Quotes, QuotesAdmin)
 

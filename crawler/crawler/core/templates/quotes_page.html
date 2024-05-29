@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 
+
+{% block topbar %}
+<div class="topbar">
+    <h1>Quotess - quotes</h1>
+    <button><a href="{% url 'quotes_new' %}">Add quotes</a></button>
+</div>
+{% endblock %}
+
+
 {% block sidebar %}
 <div class="sidenav">
     <a href="">Usuario</a>
@@ -25,7 +34,7 @@
         <tbody>
         {% for quote in quotes %}
             <tr>
-                <td>{{quote.content}}</td>
+                <td><a href="{% url 'quotes_edit' pk=quote.pk %}">{{quote.content}}</a></td>
                 <td>{{quote.creator}}</td>
                 <td>{{quote.tags}}</td>
             </tr> 

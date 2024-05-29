@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidenav">
+    <a href="">Usuario</a>
+    <a href="{% url 'movies_page' %}"id="current_sidebar_page">Movies</a>
+    <a href="{% url 'quotes_page' %}" >Quotes</a>
+</div>
+
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar">
+    <h1>Moviess - <a href="{% url 'movies_page' %}">movies </a> - new</h1>
+    <button><a href="{% url 'movies_new' %}">Add movies</a></button>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="main" >
+
+    <h3>Add top films from IMDb - <a href="https://www.imdb.com/chart/top/?ref_=nv_mv_250">https://www.imdb.com/chart/top/?ref_=nv_mv_250</a>
+        <button class="run_crawler_btn"><a href="{% url 'movies_run_crawler' %}">Run Crawler</a></button>
+    </h3>
+
+    <br>
+
+    <div class="form_main">
+        <form method="POST" class="post-form">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-default">Save</button>
+        </form>
+    </div>
+</div >
+
+{% endblock %}
