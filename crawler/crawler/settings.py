@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rangefilter',
     'crawler.quotes',
     'crawler.films',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [

@@ -11,7 +11,7 @@
 
 {% block topbar %}
 <div class="topbar">
-    <h1>Moviess - <a href="{% url 'movies_page' %}">movies </a> - edit</h1>
+    <h1>Moviess - <a href="{% url 'movies_page' %}">movies </a> - delete</h1>
     <button><a href="{% url 'movies_new' %}">Add movies</a></button>
 
 
@@ -23,9 +23,9 @@
 <div class="main" >
 
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="save btn btn-default"><a href="">Confirmar</a></button>
     </form>
+        <button><a href="{% url 'movies_page' %}">cancel</a></button>
 </div >
 
 {% endblock %}

@@ -59,6 +59,13 @@ def movies_run_crawler(request):
     messages.success(request, "Todos os top 250 filmes adcionados com sucesso.")
     return redirect('movies_page')
 
+def movies_delete(request, pk):
+    movie = get_object_or_404(Movies, pk=pk)
+    if request.method == "POST":
+        movie.delete()
+        messages.success(request, "Filme deletado com sucesso")
+        return redirect('movies_page')
+    return render(request,'movies_delete.html')
 
 
 
@@ -100,3 +107,11 @@ def quotes_run_crawler(request):
     data_request_quotes()
     messages.success(request, "quotes adcionados com sucesso.")
     return redirect('quotes_page')
+
+def quotes_delete(request, pk):
+    quote = get_object_or_404(Quotes, pk=pk)
+    if request.method == "POST":
+        quote.delete()
+        messages.success(request, "Quote deletado com sucesso")
+        return redirect('quotes_page')
+    return render(request,'quotes_delete.html')

@@ -40,6 +40,7 @@
                 <th scope="col">Tempo do filme</th>
                 <th scope="col">Idade minima</th>
                 <th scope="col">Nota do filme</th>
+                <th scope="col">Delete</th>
             </tr>
         </thead>
 
@@ -54,6 +55,7 @@
                 <td>{{movie.time}}</td>
                 <td>{{movie.minage}}</td>
                 <td>{{movie.score}}</td>
+                <td><button><a style="color:red;" href="{% url 'movies_delete' pk=movie.pk %}">excluir</a></button></td>
             </tr> 
         {% endfor %}
         </tbody>

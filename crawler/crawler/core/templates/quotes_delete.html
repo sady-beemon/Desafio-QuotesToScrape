@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
 
 {% block sidebar %}
 <div class="sidenav">
@@ -20,13 +19,11 @@
 {% block content %}
 
 <div class="main" >
-<div class="main" >
 
     <form method="POST" class="post-form">{% csrf_token %}
-    {{form.as_p}}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="save btn btn-default"><a href="">Confirmar</a></button>
     </form>
+        <button><a href="{% url 'movies_page' %}">cancel</a></button>
 </div >
-</div>
 
 {% endblock %}
