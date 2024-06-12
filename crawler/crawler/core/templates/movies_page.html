@@ -1,4 +1,22 @@
 {% extends 'base.html' %}
+{% load i18n static jazzmin admin_urls %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "css/yearpicker.min.css" %}" />
+{% endblock %}
+
+
+
+{% block extrajs %}
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{% static 'js/year.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/score.js' %}"></script>
+
+{% endblock  %}
+
+
 
 {% block sidebar %}
 <div class="sidenav">
@@ -8,6 +26,7 @@
 </div>
 
 {% endblock %}
+
 
 {% block topbar %}
 <div class="topbar">
@@ -25,9 +44,48 @@
 </div>
 {% endblock %}
 
+
 {% block content %}
 
+
 <div class="main">
+
+    <form method="get" class="post-form">
+        <div class="row g-3 w">
+            <div class="col-md-5">
+                <label for="year-picker" class="col-sm-2 col-form-label col-form-label-sm">Year-Range</label>  
+                <input type="text" class="form-control form-control--date year-picker" name="year_picker" value="{{request.GET.year_picker|default:"1900 - 2024"}}"
+                id="year-picker" autocomplete="off">
+            </div>
+            <div class="col-md-5">
+                <label for="score-picker" class="col-sm-2 col-form-label col-form-label-sm">Score-Range</label>
+                <input type="text" class="form-control form-control--date score-picker" name="score_picker" value="{{request.GET.score_picker|default:"8.0 - 9.5"}}"
+                    id="scope" autocomplete="off">
+            </div>
+        
+            <div class="col-md-6">
+                <label for="search_field" class="col-sm-2 col-form-label col-form-label-sm">Pesquisar por nome</label>
+                <input type="text" class="form-control form-control--date" name="search_field" value="{{request.GET.search_field}}">
+            </div>    
+            <div class="col-md-4">
+                <label for="inputState" class="col-sm-2 col-form-label col-form-label-sm">Idade Minima</label>
+                <select id="inputState" class="form-select" name="minage_selector">
+                    <option {% if request.GET.minage_selector == '' %}selected{% endif %} value=''>---------------</option>
+                    <option {% if request.GET.minage_selector == '12' %}selected{% endif %} value='12'>12</option>
+                    <option {% if request.GET.minage_selector == '14' %}selected{% endif %} value='14'>14</option>
+                    <option {% if request.GET.minage_selector == '16' %}selected{% endif %} value='16'>16</option>
+                    <option {% if request.GET.minage_selector == '18' %}selected{% endif %} value='18'>18</option>
+                    <option {% if request.GET.minage_selector == 'Livre' %}selected{% endif %} value='Livre'>Livre</option>
+                    <option {% if request.GET.minage_selector == 'Not Rated' %}selected{% endif %} value='Not Rated'>Not Rated</option>
+                    <option {% if request.GET.minage_selector == '(Banned)' %}selected{% endif %} value='(Banned)'>(Banned)</option>
+                    <option {% if request.GET.minage_selector == 'Approved' %}selected{% endif %} value='Approved'>Approved</option>
+                    <option {% if request.GET.minage_selector == 'Passed' %}selected{% endif %} value='Passed'>Passed</option>
+                </select>
+            </div>    
+        </div>  
+
+        <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
+    </form>
 
     <table>
         <caption>Movies</caption>

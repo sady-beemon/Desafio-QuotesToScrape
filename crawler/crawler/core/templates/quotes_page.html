@@ -29,6 +29,29 @@
 
 {% block content %}
 <div class="main">
+
+
+    <form method="get" class="post-form">
+        <div class="row g-3 w">
+            <div class="col-md-6">
+                <label for="search_field" class="col-sm-2 col-form-label col-form-label-sm">Pesquisar por conteudo</label>
+                <input type="text" class="form-control form-control--date" name="search_field" value="{{request.GET.search_field}}">
+            </div>    
+            <div class="col-md-4">
+                <label for="inputState" class="col-sm-2 col-form-label col-form-label-sm">Criador da frase</label>
+                <select id="inputState" class="form-select" name="creator_selector">
+                    <option {% if request.GET.minage_selector == '' %}selected{% endif %} value=''>---------------</option>
+                    {% for creator in creators %}
+                        <option {% if request.GET.creator_selector == '{{creator.creator}}' %}selected{% endif %} value='{{creator.creator}}'>{{creator.creator}}</option>
+                    {% endfor %}
+                </select>
+            </div>    
+        </div>  
+
+        <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
+    </form>
+
+
     <table>
         <caption>Quotes</caption>
         

@@ -22,8 +22,41 @@ def create_account(request):
 
 @login_required(login_url="/login/")
 def movies_page(request):
-    movies = Movies.objects.order_by('rank').only
-    return render(request, 'movies_page.html', {'movies' : movies})
+    movies = Movies.objects.all()
+
+    year_filter_get = request.GET.get("year_picker")
+    score_filter_get = request.GET.get("score_picker")
+    search_field_get = request.GET.get("search_field")
+    minage_selector = request.GET.get("minage_selector")
+
+    if year_filter_get:    
+        year_filter_start, year_filter_end  = year_filter_get.split(" - ")
+        if year_filter_start and year_filter_end:
+            gte_lte = {
+                'date__gte': year_filter_start,
+                'date__lte': year_filter_end,
+            }
+
+            movies = movies.filter(**gte_lte)
+
+    if score_filter_get:
+        score_filter_start, score_filter_end  = score_filter_get.split(" - ")
+        if score_filter_start and score_filter_end:
+            gte_lte = {
+                'score__gte': score_filter_start,
+                'score__lte': score_filter_end,
+            }
+
+            movies = movies.filter(**gte_lte)
+
+    if search_field_get:
+        movies = movies.filter(title__icontains=search_field_get)
+
+    if minage_selector:
+        movies = movies.filter(minage=minage_selector)
+
+    return render(request, 'movies_page.html', {'movies' : movies.order_by('rank')})
+
 
 def movies_edit(request, pk):
 
@@ -50,7 +83,7 @@ def movies_new(request):
             return redirect('movies_page')
         else:
             return render(request, 'movies_new.html', {'form': form})
-    else:
+    else: 
         form = MovieForm()
     return render(request, 'movies_new.html', {'form': form})
 
@@ -71,8 +104,24 @@ def movies_delete(request, pk):
 
 @login_required(login_url="/login/")
 def quotes_page(request):
-    quotes = Quotes.objects.order_by('content').only
-    return render(request, 'quotes_page.html', {'quotes' : quotes})
+
+    search_field_get = request.GET.get("search_field")
+    creator_selector = request.GET.get("creator_selector")
+
+    creators = []
+    quotes = Quotes.objects.all().order_by('content')
+    for quote in quotes:
+        if quote.creator not in creators:
+            creators.append({'creator' : quote.creator})
+
+
+    if search_field_get:
+        quotes = quotes.filter(content__icontains=search_field_get)
+
+    if creator_selector:
+        quotes = quotes.filter(creator=creator_selector)
+    
+    return render(request, 'quotes_page.html', {'quotes' : quotes, 'creators' : creators})
 
 def quotes_edit(request, pk):
 
