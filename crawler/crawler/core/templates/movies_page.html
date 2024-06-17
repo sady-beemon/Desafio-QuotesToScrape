@@ -92,6 +92,11 @@
         
         <thead>
             <tr>
+                <th>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    </div>
+                </th>
                 <th scope="col">Rank do filme</th>
                 <th scope="col">Titulo do filme</th>
                 <th scope="col">Ano do filme</th>
@@ -107,6 +112,11 @@
         {% for movie in movies %}
 
             <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    </div>
+                </td>
                 <td>{{movie.rank}}</td>
                 <td><a  href="{% url 'movies_edit' pk=movie.pk %}" >{{movie.title}}</a></td>
                 <td>{{movie.date}}</td>
