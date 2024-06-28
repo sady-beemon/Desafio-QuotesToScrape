@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
+{% load i18n static jazzmin admin_urls %}
 
+
+{% block extrajs %}
+
+<script type="text/javascript" src="{% static 'js/actions.js' %}"></script>
+
+{% endblock  %}
 
 {% block topbar %}
 <div class="topbar">
     <h1>Quotess - quotes</h1>
-    <button><a href="{% url 'quotes_new' %}">Add quotes</a></button>
+    <a class="btn btn-primary mt-2 mb-2" href="{% url 'quotes_new' %}">Add quotes</a>
 
     <ul class="messages">
         {% for message in messages %}
@@ -52,28 +59,53 @@
     </form>
 
 
-    <table>
-        <caption>Quotes</caption>
-        
-        <thead>
-            <tr>
-                <th scope="col">Conteudo da frase</th>
-                <th scope="col">Author da frase</th>
-                <th scope="col">Tags da frase</th>
-                <th scope="col">Delete</th>
+    <form method="post" action="">{% csrf_token %}
+        <div class="col-md-3 mt-5">
+            <select id="inputState" class="form-select" name="action_selector">
+                <option {% if request.POST.action_selector == '' %}selected{% endif %} value=''>----Actions----</option>
+                <option {% if request.POST.action_selector == 'delete_selected'%}selected{% endif %} value='delete_selected'>Delete selected</option>
+            </select>            
+        </div>
 
-            </tr>
-        </thead>
-        <tbody>
-        {% for quote in quotes %}
-            <tr>
-                <td><a href="{% url 'quotes_edit' pk=quote.pk %}">{{quote.content}}</a></td>
-                <td>{{quote.creator}}</td>
-                <td>{{quote.tags}}</td>
-                <td><button><a style="color:red;" href="{% url 'quotes_delete' pk=quote.pk %}">excluir</a></button></td>
-            </tr> 
-        {% endfor %}
-        </tbody>
-    </table>
+        <button type="submit" class="btn btn-primary m-2">Aplicar</button>
+
+
+        <p id="selectedStatus">Select 0 out of {{counter}} movies</p>
+
+
+        <table>
+            <caption>Quotes</caption>
+            
+            <thead>
+                <tr>
+                    <th>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault top-checkbox" >
+                        </div>
+                    </th>
+                    <th scope="col">Conteudo da frase</th>
+                    <th scope="col">Author da frase</th>
+                    <th scope="col">Tags da frase</th>
+                    <th scope="col">Delete</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            {% for quote in quotes %}
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckDefault checkbox" name="checkbox" value="{{quote.pk}}">
+                        </div>
+                    </td>
+                    <td><a href="{% url 'quotes_edit' pk=quote.pk %}">{{quote.content}}</a></td>
+                    <td>{{quote.creator}}</td>
+                    <td>{{quote.tags}}</td>
+                    <td><button><a style="color:red;" href="{% url 'quotes_delete' pk=quote.pk %}">excluir</a></button></td>
+                </tr> 
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
 </div>
 {% endblock %}

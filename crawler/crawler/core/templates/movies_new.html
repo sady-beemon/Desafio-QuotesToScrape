@@ -12,7 +12,7 @@
 {% block topbar %}
 <div class="topbar">
     <h1>Moviess - <a href="{% url 'movies_page' %}">movies </a> - new</h1>
-    <button><a href="{% url 'movies_new' %}">Add movies</a></button>
+    <a class="btn btn-primary mt-2 mb-2" href="{% url 'movies_new' %}">Add movies</a>
 </div>
 {% endblock %}
 
@@ -25,13 +25,13 @@
     </h3>
 
     <br>
-
-    <div class="form_main">
-        <form method="POST" class="post-form">{% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="save btn btn-default">Save</button>
-        </form>
-    </div>
+   
+    <form method="POST" class="form-control">{% csrf_token %}
+        {{ form.as_p }}
+        <div class="d-grid gap-2 col-6 mx-1">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </form>
 </div >
 
 {% endblock %}

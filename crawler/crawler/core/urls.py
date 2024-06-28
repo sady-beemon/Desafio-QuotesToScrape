@@ -7,6 +7,7 @@ urlpatterns = [
     path('home/movies/<int:pk>_edit/', views.movies_edit, name = 'movies_edit'),
     path('home/movies/<int:pk>_delete/', views.movies_delete, name = 'movies_delete'),
     path('home/movies/new/', views.movies_new, name = 'movies_new'),
+    path('home/movies/action/confirm/', views.movies_actionconfirm, name = 'movies_action_confirm'),
     path('home/movies/crawler/', views.movies_run_crawler, name = 'movies_run_crawler'),
 
     path('home/quotes/', views.quotes_page, name = 'quotes_page'),

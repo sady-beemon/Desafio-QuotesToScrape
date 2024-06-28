@@ -13,6 +13,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="{% static 'js/year.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/score.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/actions.js' %}"></script>
 
 {% endblock  %}
 
@@ -31,7 +32,7 @@
 {% block topbar %}
 <div class="topbar">
     <h1>Moviess - movies</h1>
-    <button><a href="{% url 'movies_new' %}">Add movies</a></button>
+    <a class="btn btn-primary mt-2" href="{% url 'movies_new' %}">Add movies</a>    
 
     <ul class="messages">
         {% for message in messages %}
@@ -50,7 +51,7 @@
 
 <div class="main">
 
-    <form method="get" class="post-form">
+    <form method="get" class="post-form" >
         <div class="row g-3 w">
             <div class="col-md-5">
                 <label for="year-picker" class="col-sm-2 col-form-label col-form-label-sm">Year-Range</label>  
@@ -67,7 +68,7 @@
                 <label for="search_field" class="col-sm-2 col-form-label col-form-label-sm">Pesquisar por nome</label>
                 <input type="text" class="form-control form-control--date" name="search_field" value="{{request.GET.search_field}}">
             </div>    
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label for="inputState" class="col-sm-2 col-form-label col-form-label-sm">Idade Minima</label>
                 <select id="inputState" class="form-select" name="minage_selector">
                     <option {% if request.GET.minage_selector == '' %}selected{% endif %} value=''>---------------</option>
@@ -82,10 +83,24 @@
                     <option {% if request.GET.minage_selector == 'Passed' %}selected{% endif %} value='Passed'>Passed</option>
                 </select>
             </div>    
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary mt-13">Pesquisar</button>        
+            </div>
         </div>  
-
-        <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
     </form>
+
+    <form method="post" action="">{% csrf_token %}
+        <div class="col-md-3 mt-5">
+            <select id="inputState" class="form-select" name="action_selector">
+                <option {% if request.POST.action_selector == '' %}selected{% endif %} value=''>----Actions----</option>
+                <option {% if request.POST.action_selector == 'delete_selected'%}selected{% endif %} value='delete_selected'>Delete selected</option>
+            </select>            
+        </div>
+
+        <button type="submit" class="btn btn-primary m-2">Aplicar</button>
+
+
+    <p id="selectedStatus"></p>
 
     <table>
         <caption>Movies</caption>
@@ -94,7 +109,7 @@
             <tr>
                 <th>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault top-checkbox" >
                     </div>
                 </th>
                 <th scope="col">Rank do filme</th>
@@ -110,11 +125,11 @@
         
         <tbody>
         {% for movie in movies %}
-
+            <var value></var>
             <tr>
                 <td>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault checkbox" name="checkbox" value="{{movie.pk}}">
                     </div>
                 </td>
                 <td>{{movie.rank}}</td>
@@ -128,5 +143,6 @@
         {% endfor %}
         </tbody>
     </table>
+    </form>
 </div>
 {% endblock %}

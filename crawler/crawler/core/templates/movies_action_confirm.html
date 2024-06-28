@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidenav">
+    <a href="">Usuario</a>
+    <a href="{% url 'movies_page' %}"id="current_sidebar_page">Movies</a>
+    <a href="{% url 'quotes_page' %}" >Quotes</a>
+</div>
+
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar">
+    <h1>Moviess - <a href="{% url 'movies_page' %}">movies </a> - Confirm action</h1>
+    <a class="btn btn-primary mt-2 mb-2" href="{% url 'movies_new' %}">Add movies</a>
+
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="main">
+    <h2>Remover múltiplos objetos</h2>
+    <form method="post" class="post-form mt-20" action="">{% csrf_token %}
+        <div class="row g-3 w">
+            <div class="col-md-8">
+                <p name="item">Tem certeza de que deseja apagar o moviess selecionado? Todos os seguintes objetos e seus itens relacionados serão removidos:</p>
+                <h1>Objetos</h1>
+                
+                {% for item in items  %}
+                    <input value="{{item}}" type="hidden" name="selected_item">
+                    <p>Movies: Movies object ({{item}})</p>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <h1>Resumo</h1>
+                <p>Movies</p>
+                <div class="col-md-4">
+                    <center>
+                        <button class="btn btn-primary mt-2 mb-2" value="trigger" name="confirm_action" type="submit">Sim, eu tenho certeza</button>
+                        <button class="btn btn-primary mt-2 mb-2" href="{% url 'movies_page' %}">Nao, me leve de volta</button>
+                    </center>
+                </div>
+            </div> 
+        </div>
+    </form>
+    
+</div>
+{% endblock %}

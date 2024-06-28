@@ -55,6 +55,18 @@ def movies_page(request):
     if minage_selector:
         movies = movies.filter(minage=minage_selector)
 
+
+    if request.POST.get("action_selector") == "delete_selected":
+        if request.POST.get("checkbox") and request.POST.get("action_selector"):
+            selected_movies = request.POST.getlist("checkbox")
+            return render(request, 'movies_action_confirm.html',{'items' : selected_movies})
+        
+        
+    if request.POST.get("confirm_action"):
+        movies = Movies.objects.filter(id__in=request.POST.getlist("selected_item"))
+        movies.delete()
+        return redirect('movies_page')  
+
     return render(request, 'movies_page.html', {'movies' : movies.order_by('rank')})
 
 
@@ -73,6 +85,17 @@ def movies_edit(request, pk):
         form = MovieForm(instance=movie)
     return render(request, 'movies_edit.html', {'form': form})
 
+def movies_actionconfirm(request):
+    
+    from IPython import embed; embed(header='')
+
+    for itempk in request.POST.get("item"):
+        movie = get_object_or_404(Movies, pk=itempk)
+        movie.delete
+    return redirect('movies_page')  
+      
+
+
 def movies_new(request):
 
     if request.method == "POST":
@@ -89,7 +112,6 @@ def movies_new(request):
 
 def movies_run_crawler(request):
     data_request_movie(request)
-    messages.success(request, "Todos os top 250 filmes adcionados com sucesso.")
     return redirect('movies_page')
 
 def movies_delete(request, pk):
@@ -111,7 +133,7 @@ def quotes_page(request):
     creators = []
     quotes = Quotes.objects.all().order_by('content')
     for quote in quotes:
-        if quote.creator not in creators:
+        if ({'creator' : quote.creator}) not in creators:
             creators.append({'creator' : quote.creator})
 
 
@@ -120,6 +142,19 @@ def quotes_page(request):
 
     if creator_selector:
         quotes = quotes.filter(creator=creator_selector)
+
+
+    if request.POST.get("action_selector") == "delete_selected":
+        if request.POST.get("checkbox"):
+            print("olright")
+            selected_quotes = request.POST.getlist("checkbox")
+            return render(request, 'quotes_action_confirm.html',{'items' : selected_quotes})
+        
+        
+    if request.POST.get("confirm_action"):
+        quotes = Quotes.objects.filter(id__in=request.POST.getlist("selected_item"))
+        quotes.delete()
+        return redirect('quotes_page')  
     
     return render(request, 'quotes_page.html', {'quotes' : quotes, 'creators' : creators})
 
@@ -144,7 +179,7 @@ def quotes_new(request):
         form = QuotesForm(request.POST)
         if form.is_valid():
             quote = form.save()
-            messages.success(request, "Item atualizado com sucesso")
+            messages.success(request, "Item adcionado com sucesso")
             return redirect('quotes_page')
         else:
             return render(request, 'quotes_new.html', {'form': form})
@@ -153,7 +188,7 @@ def quotes_new(request):
     return render(request, 'quotes_new.html', {'form': form})
 
 def quotes_run_crawler(request):
-    data_request_quotes()
+    data_request_quotes(request)
     messages.success(request, "quotes adcionados com sucesso.")
     return redirect('quotes_page')
 

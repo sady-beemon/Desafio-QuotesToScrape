@@ -12,7 +12,7 @@
 {% block topbar %}
 <div class="topbar">
     <h1>Quotess - <a href="{% url 'quotes_page' %}">quotes </a> - new</h1>
-    <button><a href="{% url 'quotes_new' %}">Add quotes</a></button>
+    <a class="btn btn-primary mt-2 mb-2" href="{% url 'quotes_new' %}">Add quotes</a>
 </div>
 {% endblock %}
 
@@ -26,9 +26,11 @@
 
     <br>
 
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+    <form method="POST" class="form-control">{% csrf_token %}
+        {{form.as_p}}
+        <div class="d-grid gap-2 col-6 mx-1">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
     </form>
 </div >
 
