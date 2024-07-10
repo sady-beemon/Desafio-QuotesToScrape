@@ -21,13 +21,8 @@
 {% block content %}
 
 <div class="main" >
+    {% include "movies_templates/_form_movies.html" %}
 
-    <form method="POST" class="form-control">{% csrf_token %}
-        {{ form.as_p }}
-        <div class="d-grid gap-2 col-6 mx-1">
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-    </form>
 </div >
 
 {% endblock %}

@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.contrib import messages
 
 from crawler.films.models import Movies
@@ -12,9 +14,18 @@ from crawler.quotes.actions import data_request_quotes
 
 
 def first_page(request):
-    return render(request, 'index.html')
+    return redirect("login_page")
 
 def login_page(request):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    user = authenticate(request, username=username, password=password)
+    if request.method == "POST":
+        if user is not None:
+            login(request, user)
+            return redirect("movies_page")
+        else:
+            messages.error(request, "Login ou senha invalidos")
     return render(request, 'login_page.html')
 
 def create_account(request):
@@ -59,7 +70,11 @@ def movies_page(request):
     if request.POST.get("action_selector") == "delete_selected":
         if request.POST.get("checkbox") and request.POST.get("action_selector"):
             selected_movies = request.POST.getlist("checkbox")
-            return render(request, 'movies_action_confirm.html',{'items' : selected_movies})
+            if request.POST.get("selectAll"):
+                selected_movies = []
+                for movie in movies:
+                    selected_movies.append(movie.pk)
+            return render(request, 'movies_templates/movies_action_confirm.html',{'items' : selected_movies})
         
         
     if request.POST.get("confirm_action"):
@@ -67,7 +82,12 @@ def movies_page(request):
         movies.delete()
         return redirect('movies_page')  
 
-    return render(request, 'movies_page.html', {'movies' : movies.order_by('rank')})
+    paginator = Paginator(movies.order_by('rank'), 100)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'movies_templates/movies_page.html', {'page_obj' : page_obj})
 
 
 def movies_edit(request, pk):
@@ -76,14 +96,21 @@ def movies_edit(request, pk):
     if request.method == "POST":
         form = MovieForm(request.POST, instance=movie)
         if form.is_valid():
+            if request.POST.get("save_new"):
+                movie = form.save()
+                form = MovieForm()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return redirect("movies_new")
+            elif  request.POST.get("save_stay"):
+                movie = form.save()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return render(request, 'movies_templates/movies_edit.html', {'form': form})
             movie = form.save()
             messages.success(request, "Pagina atualizada com sucesso")
             return redirect('movies_page')
-        else:
-            return render(request, 'movies_edit.html', {'form': form})
     else:
         form = MovieForm(instance=movie)
-    return render(request, 'movies_edit.html', {'form': form})
+    return render(request, 'movies_templates/movies_edit.html', {'form': form})
 
 def movies_actionconfirm(request):
     
@@ -101,14 +128,21 @@ def movies_new(request):
     if request.method == "POST":
         form = MovieForm(request.POST)
         if form.is_valid():
+            if request.POST.get("save_new"):
+                movie = form.save()
+                form = MovieForm()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return render(request, 'movies_templates/movies_new.html', {'form': form})
+            elif  request.POST.get("save_stay"):
+                movie = form.save()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return render(request, 'movies_templates/movies_edit.html', {'form': form})
             movie = form.save()
             messages.success(request, "Pagina atualizada com sucesso")
             return redirect('movies_page')
-        else:
-            return render(request, 'movies_new.html', {'form': form})
     else: 
         form = MovieForm()
-    return render(request, 'movies_new.html', {'form': form})
+    return render(request, 'movies_templates/movies_new.html', {'form': form})
 
 def movies_run_crawler(request):
     data_request_movie(request)
@@ -120,7 +154,7 @@ def movies_delete(request, pk):
         movie.delete()
         messages.success(request, "Filme deletado com sucesso")
         return redirect('movies_page')
-    return render(request,'movies_delete.html')
+    return render(request,'movies_templates/movies_delete.html')
 
 
 
@@ -148,7 +182,7 @@ def quotes_page(request):
         if request.POST.get("checkbox"):
             print("olright")
             selected_quotes = request.POST.getlist("checkbox")
-            return render(request, 'quotes_action_confirm.html',{'items' : selected_quotes})
+            return render(request, 'quotes_templates/quotes_action_confirm.html',{'items' : selected_quotes})
         
         
     if request.POST.get("confirm_action"):
@@ -156,7 +190,12 @@ def quotes_page(request):
         quotes.delete()
         return redirect('quotes_page')  
     
-    return render(request, 'quotes_page.html', {'quotes' : quotes, 'creators' : creators})
+    paginator = Paginator(quotes.order_by('content'), 100)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'quotes_templates/quotes_page.html', {'page_obj' : page_obj, 'creators' :creators})
 
 def quotes_edit(request, pk):
 
@@ -168,10 +207,10 @@ def quotes_edit(request, pk):
             messages.success(request, "Item atualizado com sucesso")
             return redirect('quotes_page')
         else:
-            return render(request, 'quotes_edit.html', {'form': form})
+            return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
     else:
         form = QuotesForm(instance=quote)
-    return render(request, 'quotes_edit.html', {'form': form})
+    return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
 
 def quotes_new(request):
 
@@ -182,14 +221,13 @@ def quotes_new(request):
             messages.success(request, "Item adcionado com sucesso")
             return redirect('quotes_page')
         else:
-            return render(request, 'quotes_new.html', {'form': form})
+            return render(request, 'quotes_templates/quotes_new.html', {'form': form})
     else:
         form = QuotesForm()
-    return render(request, 'quotes_new.html', {'form': form})
+    return render(request, 'quotes_templates/quotes_new.html', {'form': form})
 
 def quotes_run_crawler(request):
     data_request_quotes(request)
-    messages.success(request, "quotes adcionados com sucesso.")
     return redirect('quotes_page')
 
 def quotes_delete(request, pk):
@@ -198,4 +236,4 @@ def quotes_delete(request, pk):
         quote.delete()
         messages.success(request, "Quote deletado com sucesso")
         return redirect('quotes_page')
-    return render(request,'quotes_delete.html')
+    return render(request,'quotes_templates/quotes_delete.html')

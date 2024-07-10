@@ -21,17 +21,13 @@
 <div class="main" >
 
     <h3>Add top films from IMDb - <a href="https://www.imdb.com/chart/top/?ref_=nv_mv_250">https://www.imdb.com/chart/top/?ref_=nv_mv_250</a>
-        <button class="run_crawler_btn"><a href="{% url 'movies_run_crawler' %}">Run Crawler</a></button>
+        <a class="btn btn-primary mt-2 mb-2" href="{% url 'movies_run_crawler' %}">Run Crawler</a>
     </h3>
 
     <br>
-   
-    <form method="POST" class="form-control">{% csrf_token %}
-        {{ form.as_p }}
-        <div class="d-grid gap-2 col-6 mx-1">
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-    </form>
+    
+    {% include "movies_templates/_form_movies.html" %}
+
 </div >
 
 {% endblock %}

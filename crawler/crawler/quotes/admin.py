@@ -53,7 +53,6 @@ class QuotesAdmin(admin.ModelAdmin):
     list_filter = [AuthorFilter,BackgroundFix]
     search_fields = ["content"]
     actions = ["fill_in"]
-    change_form_template = 'quotes/custom_change_form.html'
 
     @admin.action(description="Fill in with data from https://quotes.toscrape.com/")
     def fill_in(modeladmin, request, queryset):

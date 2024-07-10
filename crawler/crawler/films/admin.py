@@ -19,9 +19,33 @@ def get_int_range_date(value):
 
     return start_date, end_date
 
+def get_float_range_date(value):
+    start_date = None
+    end_date = None
+
+    if value:
+        start_date, end_date = value.split(' - ')
+        start_date = float(start_date)
+        end_date = float(end_date)
+
+    return start_date, end_date
+
 
 class InputRangeYearFilter(SimpleListFilter):
     template = 'admin/input_year_range_filter.html'
+  
+    def lookups(self, *_):
+        return ((),)
+
+    def choices(self, changelist):
+        all_choice = next(super().choices(changelist))
+        all_choice['query_parts'] = (
+            (k, v) for k, v in changelist.get_filters_params().items() if k != self.parameter_name
+        )
+        yield all_choice
+
+class InputRangeScoreFilter(SimpleListFilter):
+    template = 'admin/input_score_range_filter.html'
   
     def lookups(self, *_):
         return ((),)
@@ -57,33 +81,6 @@ def yearRangeFilter(date_field_name, title):
     range_filter.queryset = queryset
 
     return range_filter
-
-
-def get_float_range_date(value):
-    start_date = None
-    end_date = None
-
-    if value:
-        start_date, end_date = value.split(' - ')
-        start_date = float(start_date)
-        end_date = float(end_date)
-
-    return start_date, end_date
-
-
-class InputRangeScoreFilter(SimpleListFilter):
-    template = 'admin/input_score_range_filter.html'
-  
-    def lookups(self, *_):
-        return ((),)
-
-    def choices(self, changelist):
-        all_choice = next(super().choices(changelist))
-        all_choice['query_parts'] = (
-            (k, v) for k, v in changelist.get_filters_params().items() if k != self.parameter_name
-        )
-        yield all_choice
-
 
 def scoreRangeFilter(date_field_name, title):
     range_filter = InputRangeScoreFilter
@@ -135,7 +132,6 @@ class MovieAdmin(admin.ModelAdmin):
     list_filter = [yearRangeFilter('date', 'Ano Criado: de - até'),scoreRangeFilter('score','Nota do filme: de - até'),AgeFilter]
     search_fields = ['title'] 
     ordering = ["rank"]
-    change_form_template = 'films/custom_change_form.html' 
 
 
 admin.site.register(Movies, MovieAdmin)

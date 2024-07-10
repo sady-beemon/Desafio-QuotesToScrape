@@ -52,7 +52,7 @@
 <div class="main">
 
     <form method="get" class="post-form" >
-        <div class="row g-3 w">
+        <div class="row g-8 w">
             <div class="col-md-5">
                 <label for="year-picker" class="col-sm-2 col-form-label col-form-label-sm">Year-Range</label>  
                 <input type="text" class="form-control form-control--date year-picker" name="year_picker" value="{{request.GET.year_picker|default:"1900 - 2024"}}"
@@ -100,16 +100,19 @@
         <button type="submit" class="btn btn-primary m-2">Aplicar</button>
 
 
-    <p id="selectedStatus"></p>
-
-    <table>
+    <div style="display: flex;">
+        <p id="selectedStatus"></p>
+        <a id="selectAllInput" href="#" style="color: darkskyblue;"></a>
+        <input id="selectAll" name="selectAll" type="hidden" value="">
+    </div>
+    <table id="myTable">
         <caption>Movies</caption>
         
         <thead>
             <tr>
                 <th>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault top-checkbox" >
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultmaster-checkbox" >
                     </div>
                 </th>
                 <th scope="col">Rank do filme</th>
@@ -124,8 +127,7 @@
 
         
         <tbody>
-        {% for movie in movies %}
-            <var value></var>
+        {% for movie in page_obj %}
             <tr>
                 <td>
                     <div class="form-check">
@@ -143,6 +145,24 @@
         {% endfor %}
         </tbody>
     </table>
+    
+    <nav class="mr-2" aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+            {% endif %}
+
+
+            <li class="page-item"><a class="page-link" href="">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
     </form>
 </div>
 {% endblock %}

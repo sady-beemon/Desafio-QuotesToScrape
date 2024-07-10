@@ -1,43 +1,79 @@
-const mastercheckbox = document.getElementById("flexCheckDefault top-checkbox")
-const selectedStatus = document.getElementById("selectedStatus")
-const checkboxes = document.getElementsByClassName('form-check-input')
+function startmessage () {
+    let items = $('.form-check-input').size();
+    selectedStatus.innerText = `Select 0 out of ${items-1} objects`
+}
 
-
-let selectedvalue = 0
-let items = 0
-
-for(let checkbox of checkboxes) {
-    
-    items += 1
-    checkbox.onclick = () => {
-        if (checkbox.checked) {
-            selectedvalue += 1;
-        }
-        else {
-            selectedvalue -= 1;
-        }
-        selectedStatus.innerText = `Select ${selectedvalue} out of ${items-1} objects`
+function checkclick () {
+    let items = $('.form-check-input').length;
+    let selectedvalue = $('.form-check-input:checked').length;
+    if ($("#flexCheckDefaultmaster-checkbox").is(":checked")){
+        selectedvalue-=1
     }
+    selectedStatus.innerText = `Select ${selectedvalue} out of ${items-1} objects`;
+    $("#selectAll").prop("value","");
 
-    selectedStatus.innerText = `Select ${selectedvalue} out of ${items-1} objects`
+    allowSelectAll(selectedvalue,items);
 }
 
 
-mastercheckbox.onclick = () => {
+function mastercheckboxclick () {
 
-    let items = 0
+    let items = $('.form-check-input').length;
+    $('input:checkbox').not(this).prop('checked', $("#flexCheckDefaultmaster-checkbox").is(":checked"));
+    let selectedvalue = $('.form-check-input:checked').length;
+    if ($("#flexCheckDefaultmaster-checkbox").is(":checked")){
+        selectedvalue-=1
+    }
+    selectedStatus.innerText = `Select ${selectedvalue} out of ${items-1} objects`;
+    $("#selectAll").prop("value","");
 
-    for(let checkbox of checkboxes) {
-        items += 1
-        if (mastercheckbox.checked) {
-            checkbox.checked = true;
-            selectedvalue = items-1;
-        }
-        else {
-            checkbox.checked = false;
-            selectedvalue = 0
-        }
+    allowSelectAll(selectedvalue,items);
+}
+
+function allowSelectAll (selectedvalue,items) {
+    if (selectedvalue === (items-1)) {
+        selectAllInput.innerText = `:Select All objects` ;    
+    }
+    else {
+        selectAllInput.innerText = `` ;
     }
 
-    selectedStatus.innerText = `Select ${selectedvalue} out of ${items-1} objects`
 }
+
+function selectAll () {
+    if(selectAllInput.innerText = `:Select All objects`){
+
+        selectedStatus.innerText = `All objects selected`
+        selectAllInput.innerText = `:deSelect All objects`
+        $("#selectAll").prop("value","yes")
+    }
+}
+
+$(document).ready(function(){
+
+    startmessage()
+
+})
+
+
+$('.form-check-input').on("click", function() {
+
+    checkclick();
+} ) ;
+
+$("#flexCheckDefaultmaster-checkbox").on("click", function() {
+    mastercheckboxclick();
+} ) ;
+
+$("#selectAllInput").on("click", function() {
+    if (selectAllInput.innerText == `:Select All objects`) {
+        selectAll();
+    }
+    else {
+        selectAllInput.innerText = `:Select All objects` ;  
+        $("#selectAll").prop("value","");
+        $("#flexCheckDefaultmaster-checkbox").prop('checked',false);
+        mastercheckboxclick();
+    }
+} ) ;
+

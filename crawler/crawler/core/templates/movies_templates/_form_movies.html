@@ -1,0 +1,53 @@
+{% load widget_tweaks %}
+<form method="POST" class="was-validated">{% csrf_token %}
+    <div class="row g-8 w">
+        <div class="col-md-7 mt-2">
+            <div class="row g-5 mb-2 ">
+                <label class="col-sm-2 h4" >{{form.rank.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.rank rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+            <div class="row g-5 mb-2 mt-1">
+                <label class="col-sm-2 h4" >{{form.title.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.title rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+            <div class="row g-5 mb-2 mt-1">
+                <label class="col-sm-2 h4" >{{form.date.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.date rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+            <div class="row g-5 mb-2 mt-1">
+                <label class="col-sm-2 h4" >{{form.time.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.time rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+            <div class="row g-5 mb-2 mt-1">
+                <label class="col-sm-2 h4" >{{form.minage.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.minage rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+            <div class="row g-5 mb-2 mt-1">
+                <label class="col-sm-2 h4" >{{form.score.label}} </label>
+                <div class="col-sm-10">
+                    {% render_field form.score rows="4" cols="4" class+="form-control"%}
+                </div>
+            </div>
+
+        </div>   
+        <div class="col-md-4 mt-2">
+            <div class="d-grid gap-2 col-6 form-control">
+                <p class="display-3" >Edit Object</p>
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-primary" value="trigger" name="save_new" type="submit">Save & adcionar outro </button>
+                <button class="btn btn-primary" value="trigger" name="save_stay" type="submit">Save & continue</button>   
+                <a class="btn btn-primary" href="{% url 'movies_page' %}">Cancel</a>            
+            </div>
+        </div>
+    </div>
+</form> 
