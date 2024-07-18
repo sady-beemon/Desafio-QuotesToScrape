@@ -36,11 +36,11 @@ def create_account(request):
     password = request.POST.get("password")
     if request.method == "POST":
         if username and password is not None:
-            user = User.objects.create_user("john", "", "")
-
+            if password == request.POST.get("confirmPassword"):
+                user = User.objects.create_user(username, "", password)
+                return render(request, 'login_page.html')
         else:
             messages.error(request, "Login ou senha invalidos")
-    return render(request, 'login_page.html')
     return render(request, 'create_account.html')
 
 @login_required(login_url="/login/")
