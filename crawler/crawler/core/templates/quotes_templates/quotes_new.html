@@ -17,21 +17,8 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="main" >
+    {% include "quotes_templates/_form_quotes.html" %}
 
-    <h3>Add quotes from Quotes to Scrape - <a href="https://quotes.toscrape.com/page/1">https://quotes.toscrape.com/page/1</a>    
-        <a class="btn btn-primary" href="{% url 'quotes_run_crawler' %}">Run Crawler</a>
-    </h3>
-
-    <br>
-
-    <form method="POST" class="form-control">{% csrf_token %}
-        {{form.as_p}}
-        <div class="d-grid gap-2 col-6 mx-1">
-            <button class="btn btn-primary" type="submit">Save</button>
-        </div>
-    </form>
 </div >
-
 {% endblock %}

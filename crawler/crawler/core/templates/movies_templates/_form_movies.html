@@ -1,5 +1,6 @@
 {% load widget_tweaks %}
 <form method="POST" class="was-validated">{% csrf_token %}
+
     <div class="row g-8 w">
         <div class="col-md-7 mt-2">
             <div class="row g-5 mb-2 ">
@@ -11,7 +12,7 @@
             <div class="row g-5 mb-2 mt-1">
                 <label class="col-sm-2 h4" >{{form.title.label}} </label>
                 <div class="col-sm-10">
-                    {% render_field form.title rows="4" cols="4" class+="form-control"%}
+                    {% render_field form.title|add_required_class:"is-required" rows="4" cols="4" class+="form-control"%}
                 </div>
             </div>
             <div class="row g-5 mb-2 mt-1">
@@ -46,7 +47,9 @@
                 <button class="btn btn-primary" type="submit">Save</button>
                 <button class="btn btn-primary" value="trigger" name="save_new" type="submit">Save & adcionar outro </button>
                 <button class="btn btn-primary" value="trigger" name="save_stay" type="submit">Save & continue</button>   
-                <a class="btn btn-primary" href="{% url 'movies_page' %}">Cancel</a>            
+                <a class="btn btn-primary" href="{% url 'movies_page' %}">Cancel</a> 
+                
+
             </div>
         </div>
     </div>

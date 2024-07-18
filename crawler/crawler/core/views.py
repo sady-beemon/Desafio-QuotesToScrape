@@ -1,19 +1,22 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.contrib import messages
 
 from crawler.films.models import Movies
-from crawler.quotes.models import Quotes
 from crawler.films.forms import MovieForm
+from crawler.quotes.models import Quotes
 from crawler.quotes.forms import QuotesForm
 
 from crawler.films.actions import data_request_movie
 from crawler.quotes.actions import data_request_quotes
+from crawler.core.ordenation import movies_header_ordenation
 
 
 def first_page(request):
+    
     return redirect("login_page")
 
 def login_page(request):
@@ -29,6 +32,15 @@ def login_page(request):
     return render(request, 'login_page.html')
 
 def create_account(request):
+    username = request.POST.get("username")
+    password = request.POST.get("password")
+    if request.method == "POST":
+        if username and password is not None:
+            user = User.objects.create_user("john", "", "")
+
+        else:
+            messages.error(request, "Login ou senha invalidos")
+    return render(request, 'login_page.html')
     return render(request, 'create_account.html')
 
 @login_required(login_url="/login/")
@@ -82,7 +94,8 @@ def movies_page(request):
         movies.delete()
         return redirect('movies_page')  
 
-    paginator = Paginator(movies.order_by('rank'), 100)
+    movies = movies_header_ordenation(request, movies)
+    paginator = Paginator(movies, 100)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -203,11 +216,18 @@ def quotes_edit(request, pk):
     if request.method == "POST":
         form = QuotesForm(request.POST, instance=quote)
         if form.is_valid():
+            if request.POST.get("save_new"):
+                quote = form.save()
+                form = QuotesForm()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return redirect("quotes_new")
+            elif  request.POST.get("save_stay"):
+                quote = form.save()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
             quote = form.save()
-            messages.success(request, "Item atualizado com sucesso")
+            messages.success(request, "Pagina atualizada com sucesso")
             return redirect('quotes_page')
-        else:
-            return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
     else:
         form = QuotesForm(instance=quote)
     return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
@@ -217,11 +237,18 @@ def quotes_new(request):
     if request.method == "POST":
         form = QuotesForm(request.POST)
         if form.is_valid():
+            if request.POST.get("save_new"):
+                quote = form.save()
+                form = QuotesForm()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return redirect("quotes_new")
+            elif  request.POST.get("save_stay"):
+                quote = form.save()
+                messages.success(request, "Pagina atualizada com sucesso")
+                return render(request, 'quotes_templates/quotes_edit.html', {'form': form})
             quote = form.save()
-            messages.success(request, "Item adcionado com sucesso")
+            messages.success(request, "Pagina atualizada com sucesso")
             return redirect('quotes_page')
-        else:
-            return render(request, 'quotes_templates/quotes_new.html', {'form': form})
     else:
         form = QuotesForm()
     return render(request, 'quotes_templates/quotes_new.html', {'form': form})

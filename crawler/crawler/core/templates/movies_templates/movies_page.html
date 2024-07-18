@@ -33,7 +33,7 @@
 <div class="topbar">
     <h1>Moviess - movies</h1>
     <a class="btn btn-primary mt-2" href="{% url 'movies_new' %}">Add movies</a>    
-
+    
     <ul class="messages">
         {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
@@ -50,8 +50,8 @@
 
 
 <div class="main">
-
-    <form method="get" class="post-form" >
+    
+    <form method="get" class="post-form"  >
         <div class="row g-8 w">
             <div class="col-md-5">
                 <label for="year-picker" class="col-sm-2 col-form-label col-form-label-sm">Year-Range</label>  
@@ -61,9 +61,9 @@
             <div class="col-md-5">
                 <label for="score-picker" class="col-sm-2 col-form-label col-form-label-sm">Score-Range</label>
                 <input type="text" class="form-control form-control--date score-picker" name="score_picker" value="{{request.GET.score_picker|default:"8.0 - 9.5"}}"
-                    id="scope" autocomplete="off">
+                id="scope" autocomplete="off">
             </div>
-        
+            
             <div class="col-md-6">
                 <label for="search_field" class="col-sm-2 col-form-label col-form-label-sm">Pesquisar por nome</label>
                 <input type="text" class="form-control form-control--date" name="search_field" value="{{request.GET.search_field}}">
@@ -87,8 +87,9 @@
                 <button type="submit" class="btn btn-primary mt-13">Pesquisar</button>        
             </div>
         </div>  
+        
     </form>
-
+        
     <form method="post" action="">{% csrf_token %}
         <div class="col-md-3 mt-5">
             <select id="inputState" class="form-select" name="action_selector">
@@ -100,68 +101,81 @@
         <button type="submit" class="btn btn-primary m-2">Aplicar</button>
 
 
-    <div style="display: flex;">
-        <p id="selectedStatus"></p>
-        <a id="selectAllInput" href="#" style="color: darkskyblue;"></a>
-        <input id="selectAll" name="selectAll" type="hidden" value="">
-    </div>
-    <table id="myTable">
-        <caption>Movies</caption>
+        <div style="display: flex;">
+            <p id="selectedStatus"></p>
+            <a id="selectAllInput" href="#" style="color: darkskyblue;"></a>
+            <input id="selectAll" name="selectAll" type="hidden" value="">
+        </div>
+        <table id="myTable" class="">
+            <caption>Movies</caption>
+            
+            <thead>
+                    <tr>
+                        <th>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultmaster-checkbox" >
+                            </div>
+                        </th>
+
+                        <th> <a type="submit" {% if request.GET.input_header_element_rank%}data-order="{{request.GET.input_header_element_rank}}"{% endif %} name="header_element_rank" id="header_element_rank" data-order="1" href="">Rank do filme &uarr;</a></th>
+                        <input {% if request.GET.input_header_element_rank%}value="{{request.GET.input_header_element_rank}}"{% endif %} type="hidden" name="input_header_element_rank" id="input_header_element_rank" value="rank">
+                        
+                        <th> <a type="submit" {% if request.GET.input_header_element_title%}data-order="{{request.GET.input_header_element_title}}"{% endif %} name="header_element_title" id="header_element_title" data-order="0" href="#">Titulo do filme</a></th>
+                        <input {% if request.GET.input_header_element_title%}value="{{request.GET.input_header_element_title}}"{% endif %} type="hidden" name="input_header_element_title" id="input_header_element_title" value="">
+
+                        <th> <a type="submit" {% if request.GET.input_header_element_date%}data-order="{{request.GET.input_header_element_date}}"{% endif %}  name="header_element_date" id="header_element_date" data-order="0" href="#">Ano do filme</a></th>
+                        <input  {% if request.GET.input_header_element_date%}value="{{request.GET.input_header_element_date}}"{% endif %} type="hidden" name="input_header_element_date" id="input_header_element_date" value="">
+
+                        <th> <a type="submit" {% if request.GET.input_header_element_time%}data-order="{{request.GET.input_header_element_time}}"{% endif %}  name="header_element_time" id="header_element_time" data-order="0" href="#">Tempo do filme</a></th>
+                        <input  {% if request.GET.input_header_element_time%}value="{{request.GET.input_header_element_time}}"{% endif %} type="hidden" name="input_header_element_time" id="input_header_element_time" value="">
+                        
+                        <th> <a type="submit" {% if request.GET.input_header_element_minage%}data-order="{{request.GET.input_header_element_minage}}"{% endif %}  name="header_element_minage" id="header_element_minage" data-order="0" href="#">Idade minima</a></th>
+                        <input  {% if request.GET.input_header_element_minage%}value="{{request.GET.input_header_element_minage}}"{% endif %} type="hidden" name="input_header_element_minage" id="input_header_element_minage" value="">
+                        
+                        <th> <a type="submit" {% if request.GET.input_header_element_score%}data-order="{{request.GET.input_header_element_score}}"{% endif %}  name="header_element_score" id="header_element_score" data-order="0" href="#">Nota do filme</a></th>
+                        <input  {% if request.GET.input_header_element_score%}value="{{request.GET.input_header_element_score}}"{% endif %} type="hidden" name="input_header_element_score" id="input_header_element_score" value="">
+                        
+                        <th scope="col">Delete</th>
+                    </tr>
+            </thead>
+
+            
+            <tbody>
+                {% for movie in page_obj %}
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="flexCheckDefault checkbox" name="checkbox" value="{{movie.pk}}">
+                            </div>
+                        </td>
+                        <td scope="col">{{movie.rank}}</td>
+                        <td scope="col"><a  href="{% url 'movies_edit' pk=movie.pk %}" >{{movie.title}}</a></td>
+                        <td scope="col">{{movie.date}}</td>
+                        <td scope="col">{{movie.time}}</td>
+                        <td scope="col">{{movie.minage}}</td>
+                        <td scope="col">{{movie.score}}</td>
+                        <td scope="col"><button><a style="color:red;" href="{% url 'movies_delete' pk=movie.pk %}">excluir</a></button></td>
+                    </tr> 
+                {% endfor %}
+            </tbody>
+        </table>
         
-        <thead>
-            <tr>
-                <th>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefaultmaster-checkbox" >
-                    </div>
-                </th>
-                <th scope="col">Rank do filme</th>
-                <th scope="col">Titulo do filme</th>
-                <th scope="col">Ano do filme</th>
-                <th scope="col">Tempo do filme</th>
-                <th scope="col">Idade minima</th>
-                <th scope="col">Nota do filme</th>
-                <th scope="col">Delete</th>
-            </tr>
-        </thead>
-
-        
-        <tbody>
-        {% for movie in page_obj %}
-            <tr>
-                <td>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="flexCheckDefault checkbox" name="checkbox" value="{{movie.pk}}">
-                    </div>
-                </td>
-                <td>{{movie.rank}}</td>
-                <td><a  href="{% url 'movies_edit' pk=movie.pk %}" >{{movie.title}}</a></td>
-                <td>{{movie.date}}</td>
-                <td>{{movie.time}}</td>
-                <td>{{movie.minage}}</td>
-                <td>{{movie.score}}</td>
-                <td><button><a style="color:red;" href="{% url 'movies_delete' pk=movie.pk %}">excluir</a></button></td>
-            </tr> 
-        {% endfor %}
-        </tbody>
-    </table>
-    
-    <nav class="mr-2" aria-label="Page navigation example">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
-            {% endif %}
+        <nav class="mr-2" aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+                {% endif %}
 
 
-            <li class="page-item"><a class="page-link" href="">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
 
-            {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
-                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
 
     </form>
 </div>
