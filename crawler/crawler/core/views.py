@@ -10,9 +10,9 @@ from crawler.films.forms import MovieForm
 from crawler.quotes.models import Quotes
 from crawler.quotes.forms import QuotesForm
 
-from crawler.films.actions import data_request_movie
+from crawler.films.actions import run_crawler_IMDb
 from crawler.quotes.actions import data_request_quotes
-from crawler.core.ordenation import movies_header_ordenation
+from crawler.core.ordenation import movies_orderby_header
 
 
 def first_page(request):
@@ -51,7 +51,7 @@ def movies_page(request):
     score_filter_get = request.GET.get("score_picker")
     search_field_get = request.GET.get("search_field")
     minage_selector = request.GET.get("minage_selector")
-
+    
     if year_filter_get:    
         year_filter_start, year_filter_end  = year_filter_get.split(" - ")
         if year_filter_start and year_filter_end:
@@ -78,9 +78,12 @@ def movies_page(request):
     if minage_selector:
         movies = movies.filter(minage=minage_selector)
 
+    if request.POST.get("action_selector") == "run_crawler":
+        run_crawler_IMDb(request)
+
 
     if request.POST.get("action_selector") == "delete_selected":
-        if request.POST.get("checkbox") and request.POST.get("action_selector"):
+        if request.POST.get("checkbox"):
             selected_movies = request.POST.getlist("checkbox")
             if request.POST.get("selectAll"):
                 selected_movies = []
@@ -94,13 +97,14 @@ def movies_page(request):
         movies.delete()
         return redirect('movies_page')  
 
-    movies = movies_header_ordenation(request, movies)
+    movies = movies_orderby_header(request, movies)
     paginator = Paginator(movies, 100)
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
-    return render(request, 'movies_templates/movies_page.html', {'page_obj' : page_obj})
+
+    return render(request, 'movies_templates/movies_page.html', {'page_obj' : page_obj, 'current_url' : request.get_full_path().split("/home/movies/")[1]})
 
 
 def movies_edit(request, pk):
@@ -158,7 +162,8 @@ def movies_new(request):
     return render(request, 'movies_templates/movies_new.html', {'form': form})
 
 def movies_run_crawler(request):
-    data_request_movie(request)
+    
+    run_crawler_IMDb(request)
     return redirect('movies_page')
 
 def movies_delete(request, pk):
@@ -193,7 +198,6 @@ def quotes_page(request):
 
     if request.POST.get("action_selector") == "delete_selected":
         if request.POST.get("checkbox"):
-            print("olright")
             selected_quotes = request.POST.getlist("checkbox")
             return render(request, 'quotes_templates/quotes_action_confirm.html',{'items' : selected_quotes})
         

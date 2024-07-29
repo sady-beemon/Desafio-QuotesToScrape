@@ -14,6 +14,7 @@
 <script type="text/javascript" src="{% static 'js/year.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/score.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/actions.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/url_ordenation.js' %}"></script>
 
 {% endblock  %}
 
@@ -87,14 +88,16 @@
                 <button type="submit" class="btn btn-primary mt-13">Pesquisar</button>        
             </div>
         </div>  
-        
+
     </form>
-        
+    
+
     <form method="post" action="">{% csrf_token %}
         <div class="col-md-3 mt-5">
             <select id="inputState" class="form-select" name="action_selector">
                 <option {% if request.POST.action_selector == '' %}selected{% endif %} value=''>----Actions----</option>
                 <option {% if request.POST.action_selector == 'delete_selected'%}selected{% endif %} value='delete_selected'>Delete selected</option>
+                <option {% if request.POST.action_selector == 'run_crawler'%}selected{% endif %} value='run_crawler'>Run Crawler: IMDb</option>
             </select>            
         </div>
 
@@ -108,7 +111,6 @@
         </div>
         <table id="myTable" class="">
             <caption>Movies</caption>
-            
             <thead>
                     <tr>
                         <th>
@@ -117,24 +119,18 @@
                             </div>
                         </th>
 
-                        <th> <a type="submit" {% if request.GET.input_header_element_rank%}data-order="{{request.GET.input_header_element_rank}}"{% endif %} name="header_element_rank" id="header_element_rank" data-order="1" href="">Rank do filme &uarr;</a></th>
-                        <input {% if request.GET.input_header_element_rank%}value="{{request.GET.input_header_element_rank}}"{% endif %} type="hidden" name="input_header_element_rank" id="input_header_element_rank" value="rank">
-                        
-                        <th> <a type="submit" {% if request.GET.input_header_element_title%}data-order="{{request.GET.input_header_element_title}}"{% endif %} name="header_element_title" id="header_element_title" data-order="0" href="#">Titulo do filme</a></th>
-                        <input {% if request.GET.input_header_element_title%}value="{{request.GET.input_header_element_title}}"{% endif %} type="hidden" name="input_header_element_title" id="input_header_element_title" value="">
+                        <th> <a href="{{current_url}}" name="header_element_rank" id="header_element_rank" data-order="">Rank do filme </a></th>      
 
-                        <th> <a type="submit" {% if request.GET.input_header_element_date%}data-order="{{request.GET.input_header_element_date}}"{% endif %}  name="header_element_date" id="header_element_date" data-order="0" href="#">Ano do filme</a></th>
-                        <input  {% if request.GET.input_header_element_date%}value="{{request.GET.input_header_element_date}}"{% endif %} type="hidden" name="input_header_element_date" id="input_header_element_date" value="">
+                        <th> <a href="{{current_url}}" name="header_element_title" id="header_element_title" data-order="">Titulo do filme </a></th> 
 
-                        <th> <a type="submit" {% if request.GET.input_header_element_time%}data-order="{{request.GET.input_header_element_time}}"{% endif %}  name="header_element_time" id="header_element_time" data-order="0" href="#">Tempo do filme</a></th>
-                        <input  {% if request.GET.input_header_element_time%}value="{{request.GET.input_header_element_time}}"{% endif %} type="hidden" name="input_header_element_time" id="input_header_element_time" value="">
-                        
-                        <th> <a type="submit" {% if request.GET.input_header_element_minage%}data-order="{{request.GET.input_header_element_minage}}"{% endif %}  name="header_element_minage" id="header_element_minage" data-order="0" href="#">Idade minima</a></th>
-                        <input  {% if request.GET.input_header_element_minage%}value="{{request.GET.input_header_element_minage}}"{% endif %} type="hidden" name="input_header_element_minage" id="input_header_element_minage" value="">
-                        
-                        <th> <a type="submit" {% if request.GET.input_header_element_score%}data-order="{{request.GET.input_header_element_score}}"{% endif %}  name="header_element_score" id="header_element_score" data-order="0" href="#">Nota do filme</a></th>
-                        <input  {% if request.GET.input_header_element_score%}value="{{request.GET.input_header_element_score}}"{% endif %} type="hidden" name="input_header_element_score" id="input_header_element_score" value="">
-                        
+                        <th> <a href="{{current_url}}" name="header_element_date" id="header_element_date" data-order="">Ano do filme </a></th> 
+
+                        <th> <a href="{{current_url}}" name="header_element_time" id="header_element_time" data-order="">Tempo do filme </a></th> 
+
+                        <th> <a href="{{current_url}}" name="header_element_minage" id="header_element_minage" data-order="">Idade Minima </a></th> 
+
+                        <th> <a href="{{current_url}}" name="header_element_score" id="header_element_score" data-order="">Nota do filme </a></th> 
+
                         <th scope="col">Delete</th>
                     </tr>
             </thead>
